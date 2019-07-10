@@ -73,11 +73,11 @@ function getWinner(player, dealer) {
   return (dealer > player) ? console.log('Dealer Wins!') : console.log('Player Wins!');
 }
 
-
+// main
 function game() {
-  const x = new GameState();
-  x.deal();
-  x.getTotal();
+  const currGame = new GameState();
+  currGame.deal();
+  currGame.getTotal();
 }
 
 game();
