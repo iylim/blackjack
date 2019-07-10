@@ -1,2 +1,2 @@
 # blackjack
-Console Game!
+Console Log Game!
