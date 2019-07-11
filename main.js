@@ -81,7 +81,7 @@ function getWinner(player, dealer) {
 }
 
 function round() {
-  rl.question(`Press A-Z or 2-0 to keep playing, '1' to Stop: `, (answer) => {
+  rl.question(`Press A-Z or 2-0 to Keep Playing, '1' to Stop: `, (answer) => {
     // stop playing
     if (answer === '1') {
       console.log('You Quit the Game!');
@@ -97,7 +97,7 @@ function round() {
 
 // main
 function game() {
-  console.log('Welcone to BlackJack');
+  console.log('Welcone to BlackJack!');
   round();
 }
 
