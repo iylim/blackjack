@@ -1,3 +1,10 @@
+// readline logic
+const readline = require('readline');
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
+});
+
 // variables
 const suits = ['♠', '♣', '♥', '♦'];
 const weights = [2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 11];
@@ -37,8 +44,8 @@ class GameState {
     dealer.hand.push(deck.cards.pop());
     player.hand.push(deck.cards.pop());
     dealer.hand.push(deck.cards.pop());
-    console.log(`Player: ${player.hand[0].weight} ${player.hand[0].suit} --- ${player.hand[1].weight} ${player.hand[1].suit}`);
-    console.log(`Dealer: ${dealer.hand[0].weight} ${dealer.hand[0].suit} --- ${dealer.hand[1].weight} ${dealer.hand[1].suit}`);
+    console.log(`Player: ${player.hand[0].weight} ${player.hand[0].suit} - ${player.hand[1].weight} ${player.hand[1].suit}`);
+    console.log(`Dealer: ${dealer.hand[0].weight} ${dealer.hand[0].suit} - ${dealer.hand[1].weight} ${dealer.hand[1].suit}`);
   }
 
   getTotal() {
@@ -73,11 +80,25 @@ function getWinner(player, dealer) {
   return (dealer > player) ? console.log('Dealer Wins!') : console.log('Player Wins!');
 }
 
+function round() {
+  rl.question(`Press A-Z or 2-0 to keep playing, '1' to Stop: `, (answer) => {
+    // stop playing
+    if (answer === '1') {
+      console.log('You Quit the Game!');
+      rl.close();
+      return;
+    } 
+    const currGame = new GameState();
+    currGame.deal();
+    currGame.getTotal();
+    round();
+  });
+}
+
 // main
 function game() {
-  const currGame = new GameState();
-  currGame.deal();
-  currGame.getTotal();
+  console.log('Welcone to BlackJack');
+  round();
 }
 
 game();
