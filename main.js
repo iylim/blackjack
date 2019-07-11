@@ -9,64 +9,76 @@ const rl = readline.createInterface({
 const suits = ['♠', '♣', '♥', '♦'];
 const weights = [2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 11];
 
-// classes
-class Card {
-  constructor(suit, weight) {
-    this.suit = suit;
-    this.weight = weight;
-  }
-}
-
-class Deck {
-  constructor() {
-    this.cards = [];
-    createDeck(this.cards);
-    shuffle(this.cards);
-  }
-}
-
-class Hand {
-  constructor(name) {
-    this.name = name;
-    this.hand = [];
-  }
-}
-
-class GameState {
-  constructor() {
-    this.player = new Hand('player');
-    this.dealer = new Hand('dealer');
-    this.deck = new Deck();
-  }
-  deal() {
-    const { player, dealer, deck } = this;
-    player.hand.push(deck.cards.pop());
-    dealer.hand.push(deck.cards.pop());
-    player.hand.push(deck.cards.pop());
-    dealer.hand.push(deck.cards.pop());
-    console.log(`Player: ${player.hand[0].weight} ${player.hand[0].suit} - ${player.hand[1].weight} ${player.hand[1].suit}`);
-    console.log(`Dealer: ${dealer.hand[0].weight} ${dealer.hand[0].suit} - ${dealer.hand[1].weight} ${dealer.hand[1].suit}`);
-  }
-
-  getTotal() {
-    const { player, dealer } = this;
-    const playerTotal = player.hand.reduce((acc, curr) => acc + curr.weight, 0);
-    const dealerTotal = dealer.hand.reduce((acc, curr) => acc + curr.weight, 0);
-    console.log(`Player: ${playerTotal}`);
-    console.log(`Dealer: ${dealerTotal}`);
-    getWinner(playerTotal, dealerTotal);
-  }
-}
-
 // helper functions
-function createDeck(cards) {
+/**
+ * Deals cards to player and dealer
+ * @param {Array} deck 
+ * @param {Number} cardDealt 
+ * @returns {Array} cards 
+ */
+function deal(deck, cardDealt) {
+  let returnedCards = [];
+  returnedCards[0] = deck[cardDealt];
+  cardDealt++;
+  returnedCards[1] = deck[cardDealt];
+  cardDealt++;
+  returnedCards[2] = cardDealt;
+  return returnedCards;
+}
+
+/**
+ * Displays the cards in player and dealer's hands
+ * @param {Array} playerHand 
+ * @param {Array} dealerHand 
+ */
+function display(playerHand, dealerHand) {
+  console.log(`Player: ${playerHand[0].weight} ${playerHand[0].suit} - ${playerHand[1].weight} ${playerHand[1].suit}`);
+  console.log(`Dealer: ${dealerHand[0].weight} ${dealerHand[0].suit} - ${dealerHand[1].weight} ${dealerHand[1].suit}`);
+}
+
+/**
+ * gets the sum of player hand and dealer hand
+ * @param {Array} playerHand cards
+ * @param {Array} dealerHand cards
+ * @returns {Array} 
+ */
+function getTotal(playerHand, dealerHand) {
+  const playerTotal = playerHand[0].weight + playerHand[1].weight;
+  const dealerTotal = dealerHand[0].weight + dealerHand[1].weight;
+  return [playerTotal, dealerTotal]
+}
+
+/**
+ * console.logs total
+ * @param {Array} playerHand 
+ * @param {Array} dealerHand 
+ */
+function displayTotal(playerHand, dealerHand) {
+  console.log(`Player: ${playerHand}`);
+  console.log(`Dealer: ${dealerHand}`);
+}
+
+/**
+ * creates deck
+ * @returns {Array} shuffled deck
+ */
+function createDeck() {
+  const deck = [];
+  let deckIndex = 0;
   for (let i = 0; i < weights.length; i++) {
     for (let j = 0; j < suits.length; j++) {
-      cards.push(new Card(suits[j], weights[i]));
+      deck[deckIndex] = ({ suit: suits[j], weight: weights[i] });
+      deckIndex++;
     } 
   }
+  return shuffle(deck);
 }
 
+/**
+ * shuffles arrays of cards (deck)
+ * @param {Array} cards 
+ * @returns {Array} shuffled cards
+ */
 function shuffle(cards) {
   for (let i = cards.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -75,30 +87,49 @@ function shuffle(cards) {
   return cards;
 }
 
+/**
+ * Checks if Dealer or Player wins
+ * @param {Number} player 
+ * @param {Number} dealer 
+ * @returns {String} winner announcement
+ */
 function getWinner(player, dealer) {
   if (player === dealer) return console.log('TIE!');
   return (dealer > player) ? console.log('Dealer Wins!') : console.log('Player Wins!');
 }
 
-function round() {
-  rl.question(`Press Any Key to Play Except '1' to Stop: `, (answer) => {
-    // stop playing
-    if (answer === '1') {
-      console.log('You Quit the Game!');
-      rl.close();
-      return;
-    } 
-    const currGame = new GameState();
-    currGame.deal();
-    currGame.getTotal();
-    round();
-  });
-}
-
-// main
+// MAIN
+/**
+ * gameplay function
+ */
 function game() {
-  console.log('Welcone to BlackJack!');
+  console.log('Welcome to BlackJack');
+  let cardDealt = 0;
+  const deck = createDeck();
+  const playerHand = deal(deck, cardDealt);
+  cardDealt = playerHand[2];
+  const dealerHand = deal(deck, cardDealt);
+  cardDealt = dealerHand[2];
+  display(playerHand, dealerHand);
+  const [playerTotal, dealerTotal] = getTotal(playerHand, dealerHand);
+  displayTotal(playerTotal, dealerTotal);
+  getWinner(playerTotal, dealerTotal);
   round();
 }
 
-game();
+/**
+ * awaits user input to continue playing or quit
+ */
+function round() {
+  rl.question(`Press A-Z or 2-0 to keep playing, '1' to stop: `, (answer) => {
+    if (answer === '1') {
+      // stop playing
+      console.log('you quit the game');
+      rl.close();
+      return;
+    } 
+    game();
+  });
+}
+
+round();
