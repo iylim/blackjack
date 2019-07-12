@@ -17,7 +17,7 @@ const weights = [2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 11];
  * @returns {Array} cards 
  */
 function deal(deck, cardDealt) {
-  let returnedCards = [];
+  const returnedCards = [];
   returnedCards[0] = deck[cardDealt];
   cardDealt++;
   returnedCards[1] = deck[cardDealt];
@@ -34,7 +34,7 @@ function deal(deck, cardDealt) {
 function displayHands(playerHand, dealerHand) {
   console.log(`Player Hand: ${playerHand[0].weight} ${playerHand[0].suit} - ${playerHand[1].weight} ${playerHand[1].suit}`);
   console.log(`Dealer Hand: ${dealerHand[0].weight} ${dealerHand[0].suit} - ${dealerHand[1].weight} ${dealerHand[1].suit}`);
-  let returnArray = [];
+  const returnArray = [];
   returnArray[0] = playerHand[0];
   returnArray[1] = playerHand[1];
   returnArray[2] = dealerHand[0];
@@ -49,8 +49,8 @@ function displayHands(playerHand, dealerHand) {
  * @returns {Array} 
  */
 function getTotal(func) {
-  let playerHand = [];
-  let dealerHand = [];
+  const playerHand = [];
+  const dealerHand = [];
   playerHand[0] = func[0];
   playerHand[1] = func[1];
   dealerHand[0] = func[2];
@@ -70,7 +70,7 @@ function displayTotal(func) {
   const dealerHand = func[1];
   console.log(`Player Total: ${playerHand}`);
   console.log(`Dealer Total: ${dealerHand}`);
-  let returnArray = [];
+  const returnArray = [];
   returnArray[0] = playerHand;
   returnArray[1] = dealerHand;
   return returnArray;
@@ -81,7 +81,7 @@ function displayTotal(func) {
  * @returns {Array} shuffled deck
  */
 function createDeck() {
-  let deck = [];
+  const deck = [];
   let deckIndex = 0;
   for (let i = 0; i < weights.length; i++) {
     for (let j = 0; j < suits.length; j++) {
@@ -140,7 +140,7 @@ async function game() {
  */
 function round() {
   rl.question(`Press A-Z or 2-0 to play, '1' to stop: `, (answer) => {
-    if(answer === '1') {
+    if (answer === '1') {
       // stop playing
       console.log('you quit the game');
       rl.close();
